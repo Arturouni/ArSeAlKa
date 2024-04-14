@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<head>    
+</head>
+<body>
+
+    <div>
+        Categoria a buscar:<input id="busqueda" type="text" >
+        <!-- 
+            <input id="boton-buscar" type="button" value="buscar"/>
+        -->
+    </div>
+    <table id="contenedor">
+
+    </div>
+
+
+    <script>
+        function procesarRespuesta(respuesta){
+            return respuesta.json(); // regresa otra promesa
+        }
+        
+        function desplegarLugares(lugares){
+
+            var contenido = "";
+
+            // iteramos los lugares
+            lugares.forEach(lugar => {
+                var renglon  = `<tr>
+                                    <td>${lugar.id}</td>
+                                    <td>${lugar.nombre}</td>
+                                    <td>${lugar.descripcion}</td>
+                                    <td><img src="http://localhost:8080/imagenes/${lugar.id}.jpg"/></td>
+                                    <td class="col-desc">${lugar.caracteristicas}</td>
+                                </tr>`
+                contenido = contenido + renglon;
+            });
+            var caja = document.querySelector("#contenedor");
+            caja.innerHTML = contenido
+        }
+
+        fetch("http://localhost:8080/api/lugares")
+        .then(procesarRespuesta)
+        .then(desplegarLugares);
+
+
+        // capturamos el evento de la caja
+
+        document.querySelector("#busqueda").addEventListener("keyup",()=>{
+            
+            //codigo al hacer click
+            var busqueda = document.querySelector("#busqueda").value;
+            console.log("value:" + busqueda);
+
+            // primero mostramos todo
+            document.querySelectorAll(".col-desc").forEach(descripcionCaja=>{
+                descripcionCaja.parentElement.style.display=""; //tr
+            });
+
+
+            document.querySelectorAll(".col-desc").forEach(descripcionCaja=>{
+                if(!descripcionCaja.innerHTML.includes(busqueda)){
+                    descripcionCaja.parentElement.style.display="none"; //tr
+                }
+            });
+
+
+        })
+    </script>
+
+</body>
+</html>

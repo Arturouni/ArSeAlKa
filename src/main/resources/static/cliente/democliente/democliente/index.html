@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="sp">
+<head>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  
+    <header>
+        <div id="logo">   
+            <img src="http://localhost:8080/imagenes/Xiilbal2.png">
+    <br><br>
+            Categoria a buscar:<input id="busqueda" type="text" >
+        </div>
+        <br>
+    </header>
+    
+    <main>
+        <br><br>
+
+      
+        <!-- 
+            <input id="boton-buscar" type="button" value="buscar"/>
+        -->
+    <br><br><br>
+
+    <div id="contenedor">
+    <script>
+        function procesarRespuesta(respuesta){
+            return respuesta.json(); // regresa otra promesa
+        }
+        
+        function desplegarLugares(lugares){
+
+            var contenido = "";
+
+            // iteramos los lugares
+            lugares.forEach(lugar => {
+                var renglon  = `<br><br><br>
+                                <section>
+                                    <table>
+                                        <tr>
+                                            <td><a href="http://localhost:8080/cliente/democliente/democliente/accesible.html">
+                                                <img src="http://localhost:8080/imagenes//${lugar.id}.jpg">
+                                                </a>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h1>Tramo: ${lugar.tramo} </h1>
+                                                <h1>Estado: ${lugar.estado}</h1>
+                                                <h1>Estación: ${lugar.nombre}</h1>
+                                                <h1>Visita: ${lugar.sitio}</h1>
+                                                <h2>Atractivo: ${lugar.descripcion}</h2>
+                                                <h2 class="col-desc">${lugar.caracteristicas}</h2>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </section> `
+                contenido = contenido + renglon;
+            });
+            var caja = document.querySelector("#contenedor");
+            caja.innerHTML = contenido
+        }
+
+        fetch("http://localhost:8080/api/lugares")
+        .then(procesarRespuesta)
+        .then(desplegarLugares);
+
+
+        // capturamos el evento de la caja
+
+        document.querySelector("#busqueda").addEventListener("keyup",()=>{
+            
+            //codigo al hacer click
+            var busqueda = document.querySelector("#busqueda").value;
+
+            // primero mostramos todo
+            document.querySelectorAll(".col-desc").forEach(descripcionCaja=>{
+                descripcionCaja.parentElement.style.display=""; //tr
+                descripcionCaja.parentElement.parentElement.parentElement.style.display="";
+
+            });
+
+
+            document.querySelectorAll(".col-desc").forEach(descripcionCaja=>{
+                if(!descripcionCaja.innerHTML.includes(busqueda)){
+                    descripcionCaja.parentElement.style.display="none"; //tr
+                    descripcionCaja.parentElement.parentElement.parentElement.style.display="none";
+                }
+            });
+
+
+        })
+    </script>
+</main>
+</div>
+   
+</body>
+</html>
